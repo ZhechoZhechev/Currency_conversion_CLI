@@ -8,7 +8,7 @@ public class Program
 {
     private static string apiKey = null!;
 
-    private const string AMOUNT_MESSAGE = "Enter a possitive number with not more than 2 digits after the decimal separator:";
+    private const string ENTER_AMOUNT_MESSAGE = "Enter a possitive number with not more than 2 digits after the decimal separator:";
 
     public static void Main(string[] args)
     {
@@ -26,7 +26,7 @@ public class Program
 
         while (true)
         {
-            var amount = GetValidAmout(AMOUNT_MESSAGE);
+            var amount = GetValidAmout(ENTER_AMOUNT_MESSAGE);
             if (amount == -1) break;
         }
     }
