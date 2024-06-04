@@ -7,7 +7,10 @@ public class Program
 {
     private static string apiKey = null!;
 
-
+    public static void Main(string[] args)
+    {
+        LoadApiKey();
+    }
     private static void LoadApiKey()
     {
         try
