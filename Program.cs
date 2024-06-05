@@ -8,7 +8,7 @@ using System.IO;
 public class Program
 {
     private static string apiKey = null!;
-    private static HashSet<string> CurrencieCodes;
+    private static HashSet<string> supportedCurrencies = new HashSet<string>();
 
     private const string ENTER_AMOUNT_MESSAGE = "Enter a possitive number with not more than 2 digits after the decimal separator:";
 
@@ -89,7 +89,30 @@ public class Program
 
         if (response.IsSuccessful) 
         {
+            var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Content)["currencies"];
+            var currenciesDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(data.ToString());
 
+            foreach ( var currency in currenciesDict) 
+            {
+                supportedCurrencies.Add(currency.Key);
+            }
+        }
+        else
+        {
+            throw new Exception("Failed to load supported currencies");
+        }
+    }
+
+    private static string IfCurrencieExist(string promptMessage)
+    {
+        while (true)
+        {
+            Console.WriteLine(promptMessage);
+            var input = Console.ReadLine().ToUpper();
+            if (supportedCurrencies.Contains(input))
+            {
+                return input;
+            }
         }
     }
 }
