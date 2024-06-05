@@ -11,6 +11,7 @@ public class Program
     private static HashSet<string> supportedCurrencies = new HashSet<string>();
 
     private const string ENTER_AMOUNT_MESSAGE = "Enter a possitive number with not more than 2 digits after the decimal separator:";
+    private const string ENTER_CURR_CODE_MESSAGE = "Enter a currency code according to ISO 4217 three letter currency code format";
 
     public static void Main(string[] args)
     {
@@ -31,6 +32,9 @@ public class Program
         {
             var amount = GetValidAmout(ENTER_AMOUNT_MESSAGE);
             if (amount == -1) break;
+
+            var currencyCode = ReturnCurrencyCodeIdExists(ENTER_CURR_CODE_MESSAGE);
+            if (currencyCode == "END") break;
         }
     }
     private static void LoadApiKey()
@@ -103,16 +107,15 @@ public class Program
         }
     }
 
-    private static string IfCurrencieExist(string promptMessage)
+    private static string ReturnCurrencyCodeIdExists(string promptMessage)
     {
         while (true)
         {
             Console.WriteLine(promptMessage);
             var input = Console.ReadLine().ToUpper();
-            if (supportedCurrencies.Contains(input))
-            {
-                return input;
-            }
+
+            if (input == "END") return input;
+            if (supportedCurrencies.Contains(input)) return input;
         }
     }
 }
