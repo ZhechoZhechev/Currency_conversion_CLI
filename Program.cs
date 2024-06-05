@@ -1,18 +1,21 @@
 ﻿namespace Currency_conversion_CLI;
 
 using Newtonsoft.Json;
+using RestSharp;
 using System.Globalization;
 using System.IO;
 
 public class Program
 {
     private static string apiKey = null!;
+    private static HashSet<string> CurrencieCodes;
 
     private const string ENTER_AMOUNT_MESSAGE = "Enter a possitive number with not more than 2 digits after the decimal separator:";
 
     public static void Main(string[] args)
     {
         LoadApiKey();
+        LoadSupportedCurrencies();
 
         Console.WriteLine("Welcome to Currency Conversion CLI!");
 
@@ -76,6 +79,18 @@ public class Program
 
         return true;
 
+    }
+    private static void LoadSupportedCurrencies()
+    {
+        var client = new RestClient($"https://api.fastforex.io");
+        var request = new RestRequest("currencies")
+            .AddParameter("api_key", apiKey);
+        var response = client.Get(request);
+
+        if (response.IsSuccessful) 
+        {
+
+        }
     }
 }
 
