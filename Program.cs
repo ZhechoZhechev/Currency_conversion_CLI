@@ -9,9 +9,12 @@ public class Program
 {
     private static string apiKey = null!;
     private static HashSet<string> supportedCurrencies = new HashSet<string>();
+    private static Dictionary<string, string> currencyRatesCache = new Dictionary<string, string>();
 
     private const string ENTER_AMOUNT_MESSAGE = "Enter a possitive number with not more than 2 digits after the decimal separator:";
-    private const string ENTER_CURR_CODE_MESSAGE = "Enter a currency code according to ISO 4217 three letter currency code format";
+    private const string ENTER_FROM_CURR_CODE_MESSAGE = "Enter a currency code according to ISO 4217 three letter currency code format to convert from";
+    private const string ENTER_TO_CURR_CODE_MESSAGE = "Enter a currency code according to ISO 4217 three letter currency code format to convert to";
+    private const string API_CLIENT_URL = "https://api.fastforex.io";
 
     public static void Main(string[] args)
     {
@@ -33,8 +36,11 @@ public class Program
             var amount = GetValidAmout(ENTER_AMOUNT_MESSAGE);
             if (amount == -1) break;
 
-            var currencyCode = ReturnCurrencyCodeIdExists(ENTER_CURR_CODE_MESSAGE);
-            if (currencyCode == "END") break;
+            var fromCurrencyCode = ReturnCurrencyCodeIdExists(ENTER_FROM_CURR_CODE_MESSAGE);
+            if (fromCurrencyCode == "END") break;
+
+            var toCurrencyCode = ReturnCurrencyCodeIdExists(ENTER_TO_CURR_CODE_MESSAGE);
+            if (toCurrencyCode == "END") break;
         }
     }
     private static void LoadApiKey()
@@ -86,19 +92,19 @@ public class Program
     }
     private static void LoadSupportedCurrencies()
     {
-        var client = new RestClient($"https://api.fastforex.io");
+        var client = new RestClient(API_CLIENT_URL);
         var request = new RestRequest("currencies")
             .AddParameter("api_key", apiKey);
         var response = client.Get(request);
 
-        if (response.IsSuccessful) 
+        if (response.IsSuccessful)
         {
             var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Content)["currencies"];
             var currenciesDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(data.ToString());
 
-            foreach ( var currency in currenciesDict) 
+            foreach (var currency in currenciesDict)
             {
-                supportedCurrencies.Add(currency.Key);
+                supportedCurrencies.Add(currency.Key.ToUpper());
             }
         }
         else
@@ -117,6 +123,11 @@ public class Program
             if (input == "END") return input;
             if (supportedCurrencies.Contains(input)) return input;
         }
+    }
+
+    private static void CacheTheCurrencyRates(string date, string fromCurrencyCode, string toCurrencyCode)
+    {
+        var client = new RestClient(API_CLIENT_URL);
     }
 }
 
