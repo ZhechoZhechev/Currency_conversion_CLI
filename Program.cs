@@ -41,6 +41,8 @@ public class Program
 
             var toCurrencyCode = ReturnCurrencyCodeIdExists(ENTER_TO_CURR_CODE_MESSAGE);
             if (toCurrencyCode == "END") break;
+
+            CacheTheCurrencyRates(dateInput);
         }
     }
     private static void LoadApiKey()
@@ -125,9 +127,17 @@ public class Program
         }
     }
 
-    private static void CacheTheCurrencyRates(string date, string fromCurrencyCode, string toCurrencyCode)
+    private static void CacheTheCurrencyRates(string date)
     {
         var client = new RestClient(API_CLIENT_URL);
+        var request = new RestRequest("historical")
+            .AddParameter("date", date)
+            .AddParameter("api_key", apiKey);
+
+        var response = client.Get(request);
+        
+        var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Content!)!["results"];
+        currencyRatesCache = JsonConvert.DeserializeObject<Dictionary<string, string>>(data.ToString()!)!;
     }
 }
 
