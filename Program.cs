@@ -42,7 +42,14 @@ public class Program
             var toCurrencyCode = ReturnCurrencyCodeIdExists(ENTER_TO_CURR_CODE_MESSAGE);
             if (toCurrencyCode == "END") break;
 
-            CacheTheCurrencyRates(dateInput);
+            if (currencyRatesCache.Count == 0)
+            {
+                CacheTheCurrencyRates(dateInput);
+            }
+            else
+            {
+                continue;
+            }
         }
     }
     private static void LoadApiKey()
