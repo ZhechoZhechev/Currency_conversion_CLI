@@ -133,7 +133,10 @@ public class Program
             if (supportedCurrencies.Contains(input)) return input;
         }
     }
-
+    /// <summary>
+    /// chaches all currenny rates for the given date
+    /// </summary>
+    /// <param name="date"></param>
     private static void CacheTheCurrencyRates(string date)
     {
         var client = new RestClient(API_CLIENT_URL);
