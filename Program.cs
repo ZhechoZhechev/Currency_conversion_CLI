@@ -99,6 +99,10 @@ public class Program
         return true;
 
     }
+    /// <summary>
+    /// Gets list of supported currencies from the API and saves them in a dictionary
+    /// </summary>
+    /// <exception cref="Exception"></exception>
     private static void LoadSupportedCurrencies()
     {
         var client = new RestClient(API_CLIENT_URL);
