@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using System.Globalization;
 using System.IO;
+using System.Security.Cryptography;
 
 public class Program
 {
@@ -46,10 +47,15 @@ public class Program
             {
                 CacheTheCurrencyRates(dateInput);
             }
-            else
-            {
-                continue;
-            }
+
+            var currentRate = GetTheRate(fromCurrencyCode, toCurrencyCode);
+            var result = Math.Round((amount * currentRate), 2);
+
+            Console.WriteLine($"{amount}{fromCurrencyCode} is {result}{toCurrencyCode}");
+
+            Console.WriteLine("Do you want to perform another conversion? Type 'END' to exit or press Enter to continue.");
+            if (Console.ReadLine().ToUpper() == "END") break;
+
         }
     }
     private static void LoadApiKey()
@@ -124,6 +130,7 @@ public class Program
         {
             throw new Exception("Failed to load supported currencies");
         }
+        
     }
 
     private static string ReturnCurrencyCodeIdExists(string promptMessage)
@@ -152,6 +159,14 @@ public class Program
         
         var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Content!)!["results"];
         currencyRatesCache = JsonConvert.DeserializeObject<Dictionary<string, string>>(data.ToString()!)!;
+    }
+
+    private static decimal GetTheRate(string from, string to) 
+    {
+        var usdFromRate = decimal.Parse(currencyRatesCache[from]);
+        var usdToRate = decimal.Parse(currencyRatesCache[to]);
+
+        return usdToRate / usdFromRate;
     }
 }
 
