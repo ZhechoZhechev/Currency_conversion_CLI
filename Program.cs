@@ -1,5 +1,6 @@
 ﻿namespace Currency_conversion_CLI;
 
+using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using RestSharp;
 using System.Globalization;
@@ -49,6 +50,8 @@ public class Program
 
             var currentRate = GetTheRate(fromCurrencyCode, toCurrencyCode);
             var result = Math.Round((amount * currentRate), 2);
+
+            SaveConverionHistory(dateInput, fromCurrencyCode, toCurrencyCode, amount, result);
 
             Console.WriteLine($"{amount}{fromCurrencyCode} is {result}{toCurrencyCode}");
 
@@ -166,6 +169,27 @@ public class Program
         var usdToRate = decimal.Parse(currencyRatesCache[to]);
 
         return usdToRate / usdFromRate;
+    }
+
+    private static void SaveConverionHistory(string date, string fromCurrency, string toCurrency, decimal amount, decimal result) 
+    {
+        var entry = new 
+        {
+            Date = date,
+            Amount = amount,
+            Base_currency = fromCurrency,
+            Target_curency = toCurrency,
+            Converted_amount = result
+        };
+
+        var history = new List<object>();
+        if (File.Exists("conversions.json")) 
+        {
+            history = JsonConvert.DeserializeObject<List<object>>(File.ReadAllText("conversions.json"));
+        }
+        history.Add(entry);
+
+        File.WriteAllText("conversions.json", JsonConvert.SerializeObject(history, Formatting.Indented));
     }
 }
 
