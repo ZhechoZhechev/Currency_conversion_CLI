@@ -182,11 +182,16 @@ public class Program
             Converted_amount = result
         };
 
-        var history = new List<object>();
+        List<object> history;
         if (File.Exists("conversions.json")) 
         {
             history = JsonConvert.DeserializeObject<List<object>>(File.ReadAllText("conversions.json"));
         }
+        else
+        {
+            history = new List<object>();
+        }
+
         history.Add(entry);
 
         File.WriteAllText("conversions.json", JsonConvert.SerializeObject(history, Formatting.Indented));
