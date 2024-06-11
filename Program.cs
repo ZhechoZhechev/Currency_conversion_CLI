@@ -195,7 +195,14 @@ public class Program
 
         return usdToRate / usdFromRate;
     }
-
+    /// <summary>
+    /// Saves history of all conversion is a json file
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="fromCurrency"></param>
+    /// <param name="toCurrency"></param>
+    /// <param name="amount"></param>
+    /// <param name="result"></param>
     private static void SaveConverionHistory(string date, string fromCurrency, string toCurrency, decimal amount, decimal result) 
     {
         var entry = new 
