@@ -17,6 +17,10 @@ public class Program
     private const string ENTER_TO_CURR_CODE_MESSAGE = "Enter a currency code according to ISO 4217 three letter currency code format to convert to";
     private const string API_CLIENT_URL = "https://api.fastforex.io";
 
+    /// <summary>
+    /// Enttry point for the bissunes logic
+    /// </summary>
+    /// <param name="args"></param>
     public static void Main(string[] args)
     {
         LoadApiKey();
@@ -60,6 +64,9 @@ public class Program
 
         }
     }
+    /// <summary>
+    /// Loads the API key from the json file
+    /// </summary>
     private static void LoadApiKey()
     {
         try
@@ -74,7 +81,11 @@ public class Program
         }
 
     }
-
+    /// <summary>
+    /// Validates if the entered date is in the correct format
+    /// </summary>
+    /// <param name="dateInput"></param>
+    /// <returns></returns>
     private static bool ValidateDateIput(string dateInput)
     {
         return DateTime.TryParseExact(dateInput, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
@@ -96,6 +107,11 @@ public class Program
         }
 
     }
+    /// <summary>
+    /// Validates if the decimal has two or less digits after the separator
+    /// </summary>
+    /// <param name="amountInput"></param>
+    /// <returns></returns>
     private static bool TwoDigitsAfterSeparator(string amountInput)
     {
         var parts = amountInput.Split(".");
@@ -134,7 +150,11 @@ public class Program
         }
         
     }
-
+    /// <summary>
+    /// Check if the entered currency code is valid
+    /// </summary>
+    /// <param name="promptMessage"></param>
+    /// <returns></returns>
     private static string ReturnCurrencyCodeIdExists(string promptMessage)
     {
         while (true)
@@ -162,7 +182,12 @@ public class Program
         var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Content!)!["results"];
         currencyRatesCache = JsonConvert.DeserializeObject<Dictionary<string, string>>(data.ToString()!)!;
     }
-
+    /// <summary>
+    /// Converts the rate for the required currency
+    /// </summary>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <returns></returns>
     private static decimal GetTheRate(string from, string to) 
     {
         var usdFromRate = decimal.Parse(currencyRatesCache[from]);
